@@ -17,7 +17,7 @@ router.get('/', async (req, res) => {
 // Get all blogs with user id
 router.get('/user/:id', async (req, res) => {
   try {
-    const blogs = await Blog.find({ postedBy: req.params.id });
+    const blogs = await Blog.find({ posterId: req.params.id });
     res.json(blogs);
     console.log("Blogs fetched successfully", blogs);
   } catch (error) {
