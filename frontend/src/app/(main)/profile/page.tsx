@@ -11,7 +11,6 @@ import { Post } from '@/lib/types';
 const page = () => {
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>()
-  const [userInfo, setUserInfo] = useState<any>()
 
   const accessToken = localStorage.getItem('accessToken')
 
@@ -22,22 +21,13 @@ const page = () => {
   // Decode the JWT token
   const user: any = jwtDecode(accessToken ? accessToken : 'token');
 
-  // console.log("User Info: ", userInfo);
+  // console.log("User Info: ", user);
 
-
-  useEffect(() => {
-    if (user && typeof user[0] === 'object') {
-      setUserInfo(user[0])
-    } else {
-      console.log("User data not found in the token.");
-    }
-
-  }, [])
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
-        const response = await axios.get(`https://dev-diaries-backend.onrender.com/blog/user/${userInfo._id}`)
+        const response = await axios.get(`https://dev-diaries-backend.onrender.com/blog/user/${user._id}`)
         const data = response.data
         // console.log("Posts: ", data);
 
@@ -48,7 +38,7 @@ const page = () => {
     }
 
     fetchPosts()
-  }, [userInfo])
+  }, [])
 
 
   return (

@@ -14,7 +14,6 @@ const validationSchema = Yup.object({
 
 const page = () => {
   const router = useRouter()
-  const [userInfo, setUserInfo] = useState<any>()
   const [file, setFile] = useState<any>()
 
 
@@ -26,16 +25,7 @@ const page = () => {
     router.push('/')
   }
 
-  useEffect(() => {
-    if (user && typeof user[0] === 'object') {
-      setUserInfo(user[0])
-    } else {
-      console.log("User data not found in the token.");
-    }
-  }, [])
-
-  console.log(userInfo)
-  console.log("user", user)
+  // console.log("user", user)
 
   return (
     <Formik
@@ -52,15 +42,15 @@ const page = () => {
           formData.append('headline', values.headline)
           formData.append('content', values.content)
           formData.append('postedOn', new Date().toISOString())
-          formData.append('posterId', userInfo?._id)
+          formData.append('posterId', user?.id)
           
-          const response = await axios.post('http://localhost:5000/api/blog', formData, {
+          const response = await axios.post('https://dev-diaries-backend.onrender.com/blog', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             }
           })
           router.push('/')
-          console.log(response.data);
+          // console.log(response.data);
         } catch (error) {
           console.log(error)
         }

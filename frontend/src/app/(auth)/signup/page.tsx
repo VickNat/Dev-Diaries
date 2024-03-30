@@ -21,9 +21,9 @@ const page = () => {
   const router = useRouter()
 
   const loginStatus = localStorage.getItem('accessToken')
-  // if (loginStatus) {
-  //   router.push('/')
-  // }
+  if (loginStatus) {
+    router.push('/')
+  }
 
   return (
     <div className='flex flex-col-reverse justify-end md:flex-row h-screen'>

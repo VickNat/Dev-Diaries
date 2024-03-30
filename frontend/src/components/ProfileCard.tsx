@@ -33,13 +33,13 @@ const ProfileCard = () => {
           <Image src={landingImage} alt='profile' className="absolute top-0 left-0 w-full h-full object-cover" />
         </div>
         <h5 className="mb-1 text-xl font-medium text-gray-900 dark:text-white">
-          {user && typeof user[0] === 'object' ? user[0].name : 'User Name'}
+          {user ? user.name : 'User Name'}
         </h5>
         <span className="text-sm text-gray-500 dark:text-gray-400">
-          {user && typeof user[0] === 'object' ? user[0].username : 'Username'}
+          {user ? user?.username : 'Username'}
         </span>
         <span className="text-sm text-gray-500 dark:text-gray-400">
-          {user && typeof user[0] === 'object' ? user[0].email : 'Email'}
+          {user ? user?.email : 'Email'}
         </span>
         <p className='text-md text-gray-600 text-center mx-auto max-w-72 dark:text-gray-200'>
           There is no bio yet.

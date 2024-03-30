@@ -18,7 +18,6 @@ import axios from 'axios';
 
 const Header = () => {
   const router = useRouter()
-  const [userInfo, setUserInfo] = useState<any>()
 
 
   const accessToken = localStorage.getItem('accessToken')
@@ -34,17 +33,9 @@ const Header = () => {
     setIsOpen(!isOpen);
   };
 
-  useEffect(() => {
-    if (user && typeof user[0] === 'object') {
-      setUserInfo(user[0])
-    } else {
-      console.log("User data not found in the token.");
-    }
-  }, [])
 
-  console.log("User info", userInfo)
-  console.log("User", user)
-  console.log("AccessTon", accessToken)
+  // console.log("User Header", user)
+  // console.log("AccessTon", accessToken)
 
 
   return (
@@ -98,7 +89,7 @@ const Header = () => {
               <Link href={`/profile`}>
                 <Avatar>
                   <AvatarImage src={landingImage} alt="Avatar" />
-                  <AvatarFallback>{userInfo?.name[0]}</AvatarFallback>
+                  <AvatarFallback>{user?.name[0]}</AvatarFallback>
                 </Avatar>
               </Link>
             </>

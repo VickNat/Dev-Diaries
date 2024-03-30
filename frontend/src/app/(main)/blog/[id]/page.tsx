@@ -28,7 +28,6 @@ const validationSchema = Yup.object({
 
 const page = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
-  const [userInfo, setUserInfo] = useState<any>()
   const [post, setPost] = useState<any>()
 
   const accessToken = localStorage.getItem('accessToken')
@@ -37,12 +36,6 @@ const page = ({ params }: { params: { id: string } }) => {
 
 
   useEffect(() => {
-    if (user && typeof user[0] === 'object') {
-      setUserInfo(user[0])
-    } else {
-      console.log("User data not found in the token.");
-    }
-
     // axios fetch post
     const fetchPost = async () => {
       try {
@@ -57,8 +50,8 @@ const page = ({ params }: { params: { id: string } }) => {
     fetchPost()
   }, [])
 
-  // console.log("User Info: ", userInfo);
-  // console.log("Post: ", post);
+  // console.log("User Info: ", user);
+  console.log("Post: ", post);
 
   return (
     <div className='mx-auto max-w-screen-md py-10 flex flex-col gap-y-5'>
@@ -73,12 +66,12 @@ const page = ({ params }: { params: { id: string } }) => {
               <Image src={landingImage} alt='' className='absolute top-0 left-0 w-full h-full object-cover' />
             </div>
             <div className='flex flex-col'>
-              <p className='text-sm text-slate-400'>{userInfo?.name}</p>
+              <p className='text-sm text-slate-400'>{user?.name}</p>
               <p className='text-sm text-slate-400'>{post?.postedOn}</p>
             </div>
           </div>
           {
-            userInfo && userInfo._id === post?.posterId ? (
+            user && user.id === post?.posterId ? (
               <div className='flex gap-x-3'>
                 <Dialog>
                   <DialogTrigger asChild>
@@ -174,14 +167,20 @@ const page = ({ params }: { params: { id: string } }) => {
                     } catch (error) {
                       console.log(error)
                     }
-                  }} 
-                className='bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg'>Delete</button>
+                  }}
+                  className='bg-red-600 hover:bg-red-500 text-white px-3 py-1 rounded-lg'>Delete</button>
               </div>
             ) : null
           }
         </div>
       </div>
-      <Image className="rounded-t-lg" src={landingImage} alt="" />
+      {
+        post ? (
+          <img src={`https://dev-diaries-backend.onrender.com/${post.imagePath}`} alt="Blog" />
+        ) : (
+          <Image className="rounded-t-lg" src={landingImage} alt="" />
+        )
+      }
 
       <p className="text-base leading-relaxed dark:text-gray-300">
         {post?.content}
