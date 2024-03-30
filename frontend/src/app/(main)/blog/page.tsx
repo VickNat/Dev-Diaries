@@ -6,7 +6,7 @@ import AllPosts from "@/components/AllPosts";
 import { Post } from '@/lib/types';
 import BlogsBackgroundImageSection from '@/components/BlogsBackgroundImageSection';
 
-const page = () => {
+const Blog = () => {
   const [posts, setPosts] = useState<Post[]>([])
   const [search, setSearch] = useState<string>('')
 
@@ -34,8 +34,8 @@ const page = () => {
   const filteredPosts = posts.filter(post =>
     post.headline.toLowerCase().startsWith(search.toLowerCase())
   );
-  console.log("Posts: ", posts);
-  console.log("Filtered Posts: ", filteredPosts)
+  // console.log("Posts: ", posts);
+  // console.log("Filtered Posts: ", filteredPosts)
 
   return (
     <div className='min-h-screen mx-auto max-w-screen-xl md:py-8 py-4 dark:bg-darkPrimary flex flex-col gap-y-5 items-center'>
@@ -54,4 +54,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Blog

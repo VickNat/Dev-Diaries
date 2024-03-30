@@ -7,31 +7,42 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 import axios from 'axios';
 import Posts from '@/components/Posts';
 import { Post } from '@/lib/types';
+import { SkeletonCard } from "@/components/SkeletonCard";
 
-const page = () => {
+const Profile = () => {
   const router = useRouter()
   const [posts, setPosts] = useState<Post[]>()
+  const [isLoading, setIsLoading] = useState(true)
 
-  const accessToken = localStorage.getItem('accessToken')
+  let accessToken = null;
 
-  if (!accessToken) {
-    router.push('/login')
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken')
+    if (!accessToken) {
+      router.push('/login')
+    }
   }
 
-  // Decode the JWT token
-  const user: any = jwtDecode(accessToken ? accessToken : 'token');
 
+  let user: any | null = null
+
+  if (accessToken) {
+    user = jwtDecode(accessToken);
+  }
   // console.log("User Info: ", user);
 
 
   useEffect(() => {
     const fetchPosts = async () => {
+
       try {
-        const response = await axios.get(`https://dev-diaries-backend.onrender.com/blog/user/${user._id}`)
+        setIsLoading(true)
+        const response = await axios.get(`https://dev-diaries-backend.onrender.com/blog/user/${user.id}`)
         const data = response.data
         // console.log("Posts: ", data);
 
         setPosts(data)
+        setIsLoading(false)
       } catch (error) {
         console.error(error)
       }
@@ -42,11 +53,22 @@ const page = () => {
 
 
   return (
-    <div className=' flex flex-col md:flex-row items-center gap-y-4 md:gap-x-4 md:justify-center md:items-start px-14 py-6'>
+    <div className='min-h-screen flex flex-col md:flex-row items-center gap-y-4 md:gap-x-4 md:justify-center md:items-start px-14 py-6'>
       <ProfileCard />
-      <Posts posts={posts ? posts : []} />
+      {
+        isLoading ? (
+          <div className='flex flex-col gap-y-4 max-w-[1200px]'>
+            <h2 className="text-xl self-center text-slate-900 dark:text-white font-semibold">Posts</h2>
+            <div className='flex flex-wrap justify-center items-center gap-10'>
+              <SkeletonCard />
+              <SkeletonCard />
+              <SkeletonCard />
+            </div>
+          </div>
+        ) : <Posts posts={posts ? posts : []} />
+      }
     </div>
   )
 }
 
-export default page
+export default Profile

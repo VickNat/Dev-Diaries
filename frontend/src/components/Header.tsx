@@ -19,11 +19,15 @@ import axios from 'axios';
 const Header = () => {
   const router = useRouter()
 
+  let accessToken = null
 
-  const accessToken = localStorage.getItem('accessToken')
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken')
+  }
+
   let user: any = null
 
-  if(accessToken){
+  if (accessToken) {
     user = jwtDecode(accessToken);
   }
 
@@ -72,12 +76,22 @@ const Header = () => {
               <button
                 onClick={async () => {
                   try {
+                    let refreshToken = null
+
+                    if (typeof window !== 'undefined') {
+                      refreshToken = localStorage.getItem('refreshToken')
+                    }
                     await axios.post('https://dev-diaries-backend.onrender.com/user/logout', {
-                      refreshToken: localStorage.getItem('refreshToken')
+                      refreshToken: refreshToken
                     })
-                    localStorage.removeItem('accessToken')
-                    localStorage.removeItem('refreshToken')
-                    router.push('/')
+
+                    if (typeof window !== 'undefined') {
+                      localStorage.removeItem('accessToken')
+                      localStorage.removeItem('refreshToken')
+                    }
+
+                    router.push('/signin')
+                    // window.location.reload()
                   } catch (error) {
                     console.log(error)
                   }

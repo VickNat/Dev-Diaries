@@ -9,10 +9,17 @@ import { JwtPayload, jwtDecode } from 'jwt-decode';
 
 const ProfileCard = () => {
 
-  const accessToken = localStorage.getItem('accessToken');
+  let accessToken = null
 
-  // Decode the JWT token
-  const user: any = jwtDecode(accessToken ? accessToken : 'token');
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken')
+  }
+
+  let user: any = null
+
+  if (accessToken) {
+    user = jwtDecode(accessToken)
+  }
 
   // Accessing properties
   // if (user && typeof user[0] === 'object') {

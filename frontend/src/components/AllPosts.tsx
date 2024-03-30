@@ -9,7 +9,7 @@ interface PostsProps {
 const AllPosts: React.FC<PostsProps> = ({ posts }) => {
 
   return (
-    <div className='flex flex-col gap-y-4 px-8 '>
+    <div className='self-center flex flex-col gap-y-4 px-8 max-w-[1200px]'>
       <h2 className="text-xl self-center text-slate-900 dark:text-white font-semibold">Posts</h2>
       <div className='flex flex-wrap justify-center items-center gap-10'>
         {posts.length > 0 ?

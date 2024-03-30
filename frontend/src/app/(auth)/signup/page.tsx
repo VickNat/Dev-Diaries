@@ -1,6 +1,6 @@
 'use client';
 
-import React from 'react'
+import React, { useState } from 'react'
 import signInImage from '../../../../public/hero-gradient.webp.svg'
 import Image from 'next/image';
 import axios from 'axios';
@@ -9,6 +9,7 @@ import * as Yup from 'yup';
 import { jwtDecode } from 'jwt-decode';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
+import { Loader2 } from "lucide-react";
 
 const validationSchema = Yup.object({
   username: Yup.string().required('Username is required'),
@@ -17,10 +18,18 @@ const validationSchema = Yup.object({
   name: Yup.string().required('Name is required')
 })
 
-const page = () => {
+const SignUp = () => {
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
 
-  const loginStatus = localStorage.getItem('accessToken')
+  let loginStatus = null;
+
+  if (typeof window !== 'undefined') {
+    if (typeof window !== 'undefined') {
+      loginStatus = localStorage.getItem('accessToken')
+    }
+  }
+
   if (loginStatus) {
     router.push('/')
   }
@@ -41,9 +50,11 @@ const page = () => {
           validationSchema={validationSchema}
           onSubmit={async (values) => {
             try {
+              setIsLoading(true)
               const response = await axios.post('https://dev-diaries-backend.onrender.com/user', values)
               const user = response.data
               console.log("Data: ", user)
+              setIsLoading(false)
               router.push('/signin')
             } catch (error) {
               console.log(error)
@@ -130,7 +141,11 @@ const page = () => {
                 type="submit"
                 className="w-full mt-5 text-white bg-blue-700 hover:bg-blue-800  focus:ring-blue-300 font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 transition-colors duration-200 ease-in-out"
               >
-                Sign Up
+                {
+                  isLoading ? <div className='w-full flex justify-center items-center'>
+                  <Loader2 size={20} />
+                  </div> : 'Sign up'
+                }
               </button>
               <p className="text-sm text-gray-700 mt-3">Already registered? <Link
                 href={'/signin'} className="text-blue-600 hover:underline cursor-pointer">Login.</Link></p>
@@ -145,4 +160,4 @@ const page = () => {
   )
 }
 
-export default page
+export default SignUp

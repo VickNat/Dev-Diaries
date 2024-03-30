@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { useRouter } from 'next/navigation';
+// import { useRouter } from 'next/navigation';
 import axios from 'axios';
 import { Formik, Form, Field } from 'formik';
 import * as Yup from 'yup';
@@ -12,17 +12,25 @@ const validationSchema = Yup.object({
   content: Yup.string().required('Content is required')
 })
 
-const page = () => {
-  const router = useRouter()
+const Create = () => {
+  // // const router = useRouter()
   const [file, setFile] = useState<any>()
 
 
-  const accessToken = localStorage.getItem('accessToken')
+  let accessToken = null;
 
-  const user: any = jwtDecode(accessToken ? accessToken : 'token');
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken')
+  }
+
+  let user: any = null
+
+  if (accessToken) {
+    user = jwtDecode(accessToken);
+  }
 
   if (!accessToken) {
-    router.push('/')
+    // router.push('/')
   }
 
   // console.log("user", user)
@@ -49,7 +57,7 @@ const page = () => {
               'Content-Type': 'multipart/form-data',
             }
           })
-          router.push('/')
+          // router.push('/')
           // console.log(response.data);
         } catch (error) {
           console.log(error)
@@ -122,4 +130,4 @@ const page = () => {
   )
 }
 
-export default page
+export default Create

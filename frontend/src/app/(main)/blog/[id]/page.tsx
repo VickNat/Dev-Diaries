@@ -26,14 +26,23 @@ const validationSchema = Yup.object({
 })
 
 
-const page = ({ params }: { params: { id: string } }) => {
+const IndividualBlog = ({ params }: { params: { id: string } }) => {
   const router = useRouter()
   const [post, setPost] = useState<any>()
 
-  const accessToken = localStorage.getItem('accessToken')
+  let accessToken = null;
 
-  const user: any = jwtDecode(accessToken ? accessToken : 'token');
+  if (typeof window !== 'undefined') {
+    accessToken = localStorage.getItem('accessToken')
+  }
+  
+  let user: any = null
 
+  if(accessToken){
+    user = jwtDecode(accessToken);
+  }
+
+  console.log("id", params.id)
 
   useEffect(() => {
     // axios fetch post
@@ -51,10 +60,10 @@ const page = ({ params }: { params: { id: string } }) => {
   }, [])
 
   // console.log("User Info: ", user);
-  console.log("Post: ", post);
+  // console.log("Post: ", post);
 
   return (
-    <div className='mx-auto max-w-screen-md py-10 flex flex-col gap-y-5'>
+    <div className='min-h-screen mx-auto max-w-screen-md py-10 flex flex-col gap-y-5'>
       <div className='flex flex-col gap-y-5'>
         <h2 className='md:text-3xl text-2xl font-semibold text-black dark:text-white'>
           {post?.headline}
@@ -67,7 +76,7 @@ const page = ({ params }: { params: { id: string } }) => {
             </div>
             <div className='flex flex-col'>
               <p className='text-sm text-slate-400'>{user?.name}</p>
-              <p className='text-sm text-slate-400'>{post?.postedOn}</p>
+              <p className='text-sm text-slate-400'>{post?.postedOn?.substring(0, 10)}</p>
             </div>
           </div>
           {
@@ -93,7 +102,7 @@ const page = ({ params }: { params: { id: string } }) => {
                         try {
                           const response = await axios.patch(`https://dev-diaries-backend.onrender.com/blog/${params.id}`, { headline: values.headline, content: values.content })
                           console.log("Response: ", response);
-                          window.location.reload()
+                          router.refresh()
                         } catch (error) {
                           console.log(error)
                         }
@@ -176,7 +185,9 @@ const page = ({ params }: { params: { id: string } }) => {
       </div>
       {
         post ? (
-          <img src={`https://dev-diaries-backend.onrender.com/${post.imagePath}`} alt="Blog" />
+          <div className='rounded-xl overflow-hidden' >
+            <img src={`https://dev-diaries-backend.onrender.com/${post.imagePath}`} className='object-cover' alt="Blog" />
+          </div>
         ) : (
           <Image className="rounded-t-lg" src={landingImage} alt="" />
         )
@@ -189,4 +200,4 @@ const page = ({ params }: { params: { id: string } }) => {
   )
 }
 
-export default page
+export default IndividualBlog
