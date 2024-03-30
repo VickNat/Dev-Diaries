@@ -98,7 +98,8 @@ router.patch('/:id', getBlog, async (req, res) => {
 // Delete one blog
 router.delete('/:id', getBlog, async (req, res) => {
   try {
-    await res.blog.remove();
+    // await res.blog.remove();
+    await Blog.findByIdAndDelete(req.params.id);
     res.json({ message: 'Blog deleted successfully' });
     console.log("Blog deleted successfully");
   } catch (error) {
