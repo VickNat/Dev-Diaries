@@ -9,8 +9,7 @@ import { jwtDecode } from 'jwt-decode';
 
 const validationSchema = Yup.object({
   headline: Yup.string().required('Headline is required'),
-  content: Yup.string().required('Content is required'),
-  image: Yup.string().required('Image is required')
+  content: Yup.string().required('Content is required')
 })
 
 const page = () => {
@@ -34,6 +33,9 @@ const page = () => {
       console.log("User data not found in the token.");
     }
   }, [])
+
+  console.log(userInfo)
+  console.log("user", user)
 
   return (
     <Formik
@@ -117,9 +119,6 @@ const page = () => {
               accept="image/*"
               className="w-full p-2 border border-gray-300 rounded-md"
             />
-            {errors.image && touched.image ? (
-              <div className="text-red-500">{errors.image}</div>
-            ) : null}
           </div>
           <button
             type="submit"

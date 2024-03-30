@@ -42,6 +42,10 @@ const Header = () => {
     }
   }, [])
 
+  console.log("User info", userInfo)
+  console.log("User", user)
+  console.log("AccessTon", accessToken)
+
 
   return (
     <nav className=" bg-white border-gray-200 px-4 lg:px-6 py-2.5 dark:bg-slate-900 sticky top-0 z-10 shadow-md shadow-blue-200 dark:shadow-blue-800 mb-5">
@@ -91,7 +95,7 @@ const Header = () => {
               >
                 <CiLogout />
               </button>
-              <Link href={`/user/${user?._id}`}>
+              <Link href={`/profile`}>
                 <Avatar>
                   <AvatarImage src={landingImage} alt="Avatar" />
                   <AvatarFallback>{userInfo?.name[0]}</AvatarFallback>
