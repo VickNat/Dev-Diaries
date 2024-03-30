@@ -1,6 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const Blog = require('../models/blogModel');
+const multer = require('multer')
+const upload = multer({ dest: 'images/' })
 
 // Get all blogs
 router.get('/', async (req, res) => {
@@ -48,13 +50,13 @@ async function getBlog(req, res, next) {
 }
 
 // Create one blog
-router.post('/', async (req, res) => {
+router.post('/', upload.single('image'), async (req, res) => {
   const blog = new Blog({
     headline: req.body.headline,
     content: req.body.content,
     posterId: req.body.posterId,
     postedOn: req.body.postedOn,
-    // image: req.body.image
+    imagePath: req.file ? req.file.path : null,
   });
 
   try {
@@ -81,8 +83,8 @@ router.patch('/:id', getBlog, async (req, res) => {
   if (req.body.postedOn != null) {
     res.blog.postedOn = req.body.postedOn;
   }
-  // if (req.body.image != null) {
-  //   res.blog.image = req.body.image;
+  // if (req.file != null) {
+  //   res.blog.image = req.file;
   // }
 
   try {

@@ -18,13 +18,13 @@ const PostCard: React.FC<PostProps> = ({ post }) => {
 
       <div className="my-4 flex flex-col gap-y-2">
         <h5 className="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Headline
+          {post.headline}
         </h5>
         <div className='flex items-center gap-x-3 md:gap-x-4'>
           <div className='md:w-14 md:h-14 w-12 h-12 bg-black rounded-full relative overflow-hidden'>
             <Image src={landingImage} alt='' className='absolute top-0 left-0 w-full h-full object-cover' />
           </div>
-          <p className='text-sm text-slate-400'>Date</p>
+          <p className='text-sm text-slate-400'>{post.postedOn}</p>
         </div>
       </div>
     </Link>

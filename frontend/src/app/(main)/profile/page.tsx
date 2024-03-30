@@ -52,7 +52,7 @@ const page = () => {
 
 
   return (
-    <div className='flex flex-col md:flex-row items-center gap-y-4 md:gap-x-4 md:justify-center md:items-start px-14 py-6'>
+    <div className=' flex flex-col md:flex-row items-center gap-y-4 md:gap-x-4 md:justify-center md:items-start px-14 py-6'>
       <ProfileCard />
       <Posts posts={posts ? posts : []} />
     </div>

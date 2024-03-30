@@ -1,25 +1,46 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import ThemeToggler from './ThemeToggler'
 import Link from 'next/link'
 import Image from 'next/image'
 import logoLight from '../../public/Logo Light.svg';
 import logoDark from '../../public/Logo Dark.svg';
 import { useRouter } from 'next/navigation'
+import { jwtDecode } from 'jwt-decode';
+import {
+  Avatar,
+  AvatarFallback,
+  AvatarImage,
+} from "@/components/ui/avatar";
+import landingImage from '../../public/landingImage.svg'
+import { CiLogout } from "react-icons/ci";
+import axios from 'axios';
 
 
 const Header = () => {
-  let user: any = null;
-  if (typeof window !== 'undefined') {
-    const stringifiedUser = localStorage.getItem('user')
-    user = JSON.parse(stringifiedUser ? stringifiedUser : "null")
-  }
   const router = useRouter()
+  const [userInfo, setUserInfo] = useState<any>()
+
+
+  const accessToken = localStorage.getItem('accessToken')
+  let user: any = null
+
+  if(accessToken){
+    user = jwtDecode(accessToken);
+  }
 
   const [isOpen, setIsOpen] = useState(false);
 
   const toggleMenu = () => {
     setIsOpen(!isOpen);
   };
+
+  useEffect(() => {
+    if (user && typeof user[0] === 'object') {
+      setUserInfo(user[0])
+    } else {
+      console.log("User data not found in the token.");
+    }
+  }, [])
 
 
   return (
@@ -51,18 +72,31 @@ const Header = () => {
           >
             <ThemeToggler />
           </div>
-          {user?._id ? (
+          {accessToken ? (
             <>
-              <Link href={`/user/${user?._id}`}>Profile</Link>
-              <div
-                onClick={() => {
-                  localStorage.removeItem('user')
-                  router.push('/')
+              <button
+                onClick={async () => {
+                  try {
+                    await axios.post('https://dev-diaries-backend.onrender.com/user/logout', {
+                      refreshToken: localStorage.getItem('refreshToken')
+                    })
+                    localStorage.removeItem('accessToken')
+                    localStorage.removeItem('refreshToken')
+                    router.push('/')
+                  } catch (error) {
+                    console.log(error)
+                  }
                 }}
                 className="cursor-pointer text-gray-800 dark:text-white hover:bg-gray-50  font-medium rounded-lg text-sm px-4 lg:px-5 py-2 lg:py-2.5 dark:hover:bg-gray-700 focus:outline-none "
               >
-                Log out
-              </div>
+                <CiLogout />
+              </button>
+              <Link href={`/user/${user?._id}`}>
+                <Avatar>
+                  <AvatarImage src={landingImage} alt="Avatar" />
+                  <AvatarFallback>{userInfo?.name[0]}</AvatarFallback>
+                </Avatar>
+              </Link>
             </>
           ) : (
             <>
@@ -137,14 +171,18 @@ const Header = () => {
                 Blogs
               </Link>
             </li>
-            <li>
-              <Link
-                href="/blog/create"
-                className="block py-2 pr-4 pl-3 text-gray-800 rounded lg:bg-transparent lg:text-gray-800 lg:p-0 dark:text-white"
-              >
-                Create
-              </Link>
-            </li>
+            {
+              accessToken ? (
+                <li>
+                  <Link
+                    href="/blog/create"
+                    className="block py-2 pr-4 pl-3 text-gray-800 rounded lg:bg-transparent lg:text-gray-800 lg:p-0 dark:text-white"
+                  >
+                    Create
+                  </Link>
+                </li>
+              ) : null
+            }
           </ul>
         </div>
       </div>

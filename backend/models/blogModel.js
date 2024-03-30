@@ -17,7 +17,7 @@ const blogSchema = new mongoose.Schema({
     type: String,
     default: Date.now
   },
-  image: {
+  imagePath: {
     type: String,
     required: false
   }
